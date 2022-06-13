@@ -27,6 +27,25 @@ struct ContentView: View {
             Text(item.collectionName)
             }
         }
+        .task {
+            await loadData()
+        }
+    }
+    // Load Data
+    func loadData() async{
+        guard let url = URL(string:"https://api.alakod.com/api/swift")else{
+            print("Invalid URL")
+            return
+        }
+        
+        do{
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let decodedResponse = try? JSONDecoder().decode(Response.self, from: data){
+                results = decodedResponse.results
+            }
+        } catch{
+            print("invalid data")
+        }
     }
 }
 
